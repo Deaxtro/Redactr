@@ -2,7 +2,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 // use psutil::memory;
 use redactr::load_rule_configs;
 use regex::Regex;
-use tracing::{info, warn, Level};
+use tracing::{info, debug, Level};
 use tracing_subscriber::FmtSubscriber;
 // use serde::Serialize;
 // use std::{str::FromStr, time::{SystemTime, UNIX_EPOCH}};
@@ -99,14 +99,19 @@ async fn redact(input_text: web::Json<String>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+
+    let address = "127.0.0.1";
+    let port = "8080";
+    let bind_address = format!("{}:{}", address, port);
     
     let subscriber = FmtSubscriber::builder()
-        .with_max_level(Level::INFO)
+        .with_max_level(Level::DEBUG)
         .finish();
 
     tracing::subscriber::set_global_default(subscriber).expect("Failed to set global default");
 
     info!("Starting redactr service...");
+    debug!("Binding to address: {}", bind_address);
 
     HttpServer::new(|| {
         App::new()
@@ -114,7 +119,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/redact").route(web::post().to(redact)))
             // .service(web::resource("/health").route(web::get().to(health)))
     })
-    .bind("127.0.0.1:8080")?
+    .bind(bind_address)?
     .run()
     .await
 }
