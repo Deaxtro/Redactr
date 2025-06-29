@@ -120,7 +120,7 @@ async fn main() -> std::io::Result<()> {
     tracing::subscriber::set_global_default(subscriber).expect("Failed to set global default");
 
     info!("Starting redactr service...");
-    debug!("Binding to address: {}", bind_address);
+    info!(address=%address, port=%port, "Listening at");
 
     HttpServer::new(|| {
         App::new()
