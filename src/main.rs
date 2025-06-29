@@ -2,6 +2,8 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 // use psutil::memory;
 use redactr::load_rule_configs;
 use regex::Regex;
+use tracing::{info, warn, Level};
+use tracing_subscriber::FmtSubscriber;
 // use serde::Serialize;
 // use std::{str::FromStr, time::{SystemTime, UNIX_EPOCH}};
 
@@ -97,6 +99,15 @@ async fn redact(input_text: web::Json<String>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    
+    let subscriber = FmtSubscriber::builder()
+        .with_max_level(Level::INFO)
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber).expect("Failed to set global default");
+
+    info!("Starting redactr service...");
+
     HttpServer::new(|| {
         App::new()
             .service(web::resource("/").route(web::get().to(index)))
