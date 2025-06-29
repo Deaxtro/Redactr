@@ -2,7 +2,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 // use psutil::memory;
 use redactr::load_rule_configs;
 use regex::Regex;
-use tracing::{info, debug, Level};
+use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 // use serde::Serialize;
 // use std::{str::FromStr, time::{SystemTime, UNIX_EPOCH}};

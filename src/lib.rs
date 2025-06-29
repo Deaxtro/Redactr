@@ -1,6 +1,6 @@
 use serde::Deserialize;
 use std::collections::HashMap;
-use tracing::info;
+use tracing::{info,debug};
 
 const JSON: &str = include_str!("../regex_rules.json");
 
@@ -31,7 +31,7 @@ impl Rule {
     }
 
     pub fn on_match(&mut self, matched_text: &str) -> String {
-        info!("Redacting: {}", matched_text);
+        debug!("Redacting: {}", matched_text);
         let redacted_match = self
             .mapping
             .entry(matched_text.to_string())
